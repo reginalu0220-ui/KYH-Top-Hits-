@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>KYH Top 100 Hits</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #111827;
+      --muted: #9ca3af;
+      --text: #e5e7eb;
+      --accent: #60a5fa;
+      --border: #1f2937;
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(180deg, var(--bg), #0b1225 40%, #050a19);
+      color: var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Noto Sans, Ubuntu, Cantarell, Helvetica Neue, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      line-height: 1.5;
+    }
+    .wrap {
+      max-width: 940px;
+      margin: 40px auto 80px;
+      padding: 0 16px;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    h1 {
+      font-size: 28px;
+      margin: 0;
+      letter-spacing: 0.3px;
+    }
+    .controls {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .control {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 14px;
+      padding: 10px 14px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: transform .08s ease, background .2s ease, border-color .2s ease;
+    }
+    .control:hover { transform: translateY(-1px); border-color: var(--accent); }
+    .control[aria-pressed="true"] { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .searchbar {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 10px 0 22px;
+    }
+    .searchbar input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--text);
+      font-size: 15px;
+      outline: none;
+    }
+    .meta {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    ol.songs {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      overflow: hidden;
+      background: rgba(17, 24, 39, 0.6);
+      backdrop-filter: blur(6px);
+    }
+    .song {
+      display: grid;
+      grid-template-columns: 56px 1fr;
+      align-items: center;
+      gap: 6px;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .song:last-child { border-bottom: none; }
+    .rank {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      background: #0b1225;
+      border: 1px solid var(--border);
+      font-weight: 600;
+      color: var(--muted);
+    }
+    .title {
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+    }
+    footer {
+      margin-top: 26px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    a.inline {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .tip {
+      border-left: 3px solid var(--accent);
+      padding: 10px 12px;
+      background: rgba(96, 165, 250, 0.08);
+      border-radius: 8px;
+      margin-top: 14px;
+      font-size: 13px;
+    }
+  
+    .highlight-regina {
+      color: #fbbf24; /* amber */
+      font-weight: 700;
+    }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>KYH Top 100 Hits</h1>
+      <div class="controls">
+        <button class="control" id="sort-rank" aria-pressed="true" title="Sort by list order">Sort by Rank</button>
+        <button class="control" id="sort-alpha" aria-pressed="false" title="Sort alphabetically">Sort A–Z</button>
+      </div>
+    </header>
+
+    <div class="searchbar" role="search">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M21 21l-4.3-4.3M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+      <input id="q" type="search" placeholder="Search girls…" aria-label="Search girls"/>
+    </div>
+
+    <div class="meta" id="count"></div>
+
+    <ol class="songs" id="list" aria-live="polite" aria-busy="false"></ol>
+
+    <div class="tip">
+      Tip: Replace the placeholders with your real list by editing this file. 
+      In the <strong>&lt;script&gt;</strong> at the bottom, update the <code>hits</code> array (keep 100 items for 1–100).
+    </div>
+
+    <footer>
+      Built to run fully offline. Share this single HTML file anywhere.
+    </footer>
+  </div>
+
+  <script>
+    // --- Data: replace these placeholders with your actual KYH Top 100 ---
+    const hits = ["KYH Hit 1", "KYH Hit 2", "KYH Hit 3", "KYH Hit 4", "KYH Hit 5", "KYH Hit 6", "KYH Hit 7", "KYH Hit 8", "KYH Hit 9", "KYH Hit 10", "KYH Hit 11", "KYH Hit 12", "KYH Hit 13", "KYH Hit 14", "KYH Hit 15", "Regina", "KYH Hit 17", "KYH Hit 18", "KYH Hit 19", "KYH Hit 20", "KYH Hit 21", "KYH Hit 22", "KYH Hit 23", "KYH Hit 24", "KYH Hit 25", "KYH Hit 26", "KYH Hit 27", "KYH Hit 28", "KYH Hit 29", "KYH Hit 30", "KYH Hit 31", "KYH Hit 32", "KYH Hit 33", "KYH Hit 34", "KYH Hit 35", "KYH Hit 36", "KYH Hit 37", "KYH Hit 38", "KYH Hit 39", "KYH Hit 40", "KYH Hit 41", "KYH Hit 42", "KYH Hit 43", "KYH Hit 44", "KYH Hit 45", "KYH Hit 46", "KYH Hit 47", "KYH Hit 48", "KYH Hit 49", "KYH Hit 50", "KYH Hit 51", "KYH Hit 52", "KYH Hit 53", "KYH Hit 54", "KYH Hit 55", "KYH Hit 56", "KYH Hit 57", "KYH Hit 58", "KYH Hit 59", "KYH Hit 60", "KYH Hit 61", "KYH Hit 62", "KYH Hit 63", "KYH Hit 64", "KYH Hit 65", "KYH Hit 66", "KYH Hit 67", "KYH Hit 68", "KYH Hit 69", "KYH Hit 70", "KYH Hit 71", "KYH Hit 72", "KYH Hit 73", "KYH Hit 74", "KYH Hit 75", "KYH Hit 76", "KYH Hit 77", "KYH Hit 78", "KYH Hit 79", "KYH Hit 80", "KYH Hit 81", "KYH Hit 82", "KYH Hit 83", "KYH Hit 84", "KYH Hit 85", "KYH Hit 86", "KYH Hit 87", "KYH Hit 88", "KYH Hit 89", "KYH Hit 90", "KYH Hit 91", "KYH Hit 92", "KYH Hit 93", "KYH Hit 94", "KYH Hit 95", "KYH Hit 96", "KYH Hit 97", "KYH Hit 98", "KYH Hit 99", "KYH Hit 100"];
+
+    // --- State ---
+    let mode = 'rank'; // 'rank' | 'alpha'
+    let filtered = [...hits];
+
+    // --- DOM ---
+    const list = document.getElementById('list');
+    const count = document.getElementById('count');
+    const q = document.getElementById('q');
+    const btnRank = document.getElementById('sort-rank');
+    const btnAlpha = document.getElementById('sort-alpha');
+
+    function render(items) {
+      list.setAttribute('aria-busy', 'true');
+      list.innerHTML = '';
+      items.forEach((title, idx) => {
+        const li = document.createElement('li');
+        li.className = 'song';
+        const rank = document.createElement('div');
+        rank.className = 'rank';
+        rank.textContent = mode === 'rank' ? (hits.indexOf(title) + 1) : (idx + 1);
+        const text = document.createElement('div');
+        text.className = 'title';
+        text.textContent = title;
+        if (title === 'Regina') { text.classList.add('highlight-regina'); }
+        li.appendChild(rank);
+        li.appendChild(text);
+        list.appendChild(li);
+      });
+      count.textContent = `${items.length} item${items.length === 1 ? '' : 's'}` + (q.value.trim() ? ` • filtered by "${q.value.trim()}"` : '');
+      list.setAttribute('aria-busy', 'false');
+    }
+
+    function sortAndRender() {
+      if (mode === 'rank') {
+        filtered = [...hits].filter(t => t.toLowerCase().includes(q.value.toLowerCase()));
+      } else {
+        filtered = [...hits].filter(t => t.toLowerCase().includes(q.value.toLowerCase())).sort((a,b) => a.localeCompare(b));
+      }
+      render(filtered);
+    }
+
+    q.addEventListener('input', sortAndRender);
+    btnRank.addEventListener('click', () => {
+      mode = 'rank';
+      btnRank.setAttribute('aria-pressed', 'true');
+      btnAlpha.setAttribute('aria-pressed', 'false');
+      sortAndRender();
+    });
+    btnAlpha.addEventListener('click', () => {
+      mode = 'alpha';
+      btnRank.setAttribute('aria-pressed', 'false');
+      btnAlpha.setAttribute('aria-pressed', 'true');
+      sortAndRender();
+    });
+
+    // Initial render
+    sortAndRender();
+  </script>
+</body>
+</html>
